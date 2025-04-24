@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PASTELOMETRO - Calculadora para Repostería</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 id="business-name">PASTELOMETRO</h1>
+            <p>Calculadora inteligente para repostería</p>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="ingredients">Ingredientes</div>
+            <div class="tab" data-tab="recipes">Recetas</div>
+            <div class="tab" data-tab="sales">Ventas</div>
+            <div class="tab" data-tab="settings">Configuración</div>
+        </div>
+        
+        <div id="ingredients" class="tab-content active">
+            <div class="card">
+                <h2>Agregar Nuevo Ingrediente</h2>
+                <div class="form-group">
+                    <label for="ingredient-name">Nombre del Ingrediente</label>
+                    <input type="text" id="ingredient-name" placeholder="Ej: Harina">
+                </div>
+                <div class="form-group">
+                    <label for="ingredient-price">Precio ($)</label>
+                    <input type="number" id="ingredient-price" step="0.01" placeholder="Ej: 1.80">
+                </div>
+                <div class="form-group">
+                    <label for="ingredient-quantity">Cantidad</label>
+                    <input type="number" id="ingredient-quantity" step="0.01" placeholder="Ej: 1000">
+                </div>
+                <div class="form-group">
+                    <label for="ingredient-unit">Unidad de Medida</label>
+                    <select id="ingredient-unit">
+                        <option value="g">Gramos (g)</option>
+                        <option value="kg">Kilogramos (kg)</option>
+                        <option value="ml">Mililitros (ml)</option>
+                        <option value="l">Litros (l)</option>
+                        <option value="unidades">Unidades</option>
+                    </select>
+                </div>
+                <button id="add-ingredient">Agregar Ingrediente</button>
+            </div>
+            
+            <div class="card">
+                <h2>Lista de Ingredientes</h2>
+                <table id="ingredients-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Precio por unidad</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ingredients-list">
+                        <!-- Aquí se cargarán los ingredientes -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="recipes" class="tab-content">
+            <div class="card">
+                <h2>Agregar Nueva Receta</h2>
+                <div class="form-group">
+                    <label for="recipe-name">Nombre de la Receta</label>
+                    <input type="text" id="recipe-name" placeholder="Ej: Pastel de Piña">
+                </div>
+                
+                <div id="recipe-ingredients">
+                    <h3>Ingredientes</h3>
+                    <div class="ingredient-row">
+                        <div class="grid">
+                            <div class="form-group">
+                                <label>Ingrediente</label>
+                                <select class="recipe-ingredient">
+                                    <option value="">Seleccionar</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Cantidad</label>
+                                <input type="number" class="recipe-quantity" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="add-more-ingredients">Agregar más ingredientes</button>
+                
+                <div class="form-group">
+                    <label for="recipe-portions">Porciones (unidades)</label>
+                    <input type="number" id="recipe-portions" value="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="recipe-profit">Porcentaje de ganancia (%)</label>
+                    <input type="number" id="recipe-profit" value="30">
+                </div>
+                
+                <div class="form-group">
+                    <label for="recipe-depreciation">Depreciación de maquinaria (%)</label>
+                    <input type="number" id="recipe-depreciation" value="5">
+                </div>
+                
+                <div class="form-group">
+                    <label for="recipe-labor">Mano de obra (%)</label>
+                    <input type="number" id="recipe-labor" value="12">
+                </div>
+                
+                <div class="form-group">
+                    <label for="recipe-additional">Costos adicionales ($) (empaque, delivery, etc.)</label>
+                    <input type="number" id="recipe-additional" step="0.01" value="0">
+                </div>
+                
+                <button id="save-recipe">Guardar Receta</button>
+            </div>
+            
+            <div class="card">
+                <h2>Mis Recetas</h2>
+                <table id="recipes-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Costo Total</th>
+                            <th>Precio de Venta</th>
+                            <th>Porciones</th>
+                            <th>Precio por Porción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recipes-list">
+                        <!-- Aquí se cargarán las recetas -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="sales" class="tab-content">
+            <div class="card">
+                <h2>Generar Venta</h2>
+                <div class="form-group">
+                    <label for="sale-recipe">Seleccionar Receta</label>
+                    <select id="sale-recipe">
+                        <option value="">Seleccionar receta</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sale-type">Tipo de Venta</label>
+                    <select id="sale-type">
+                        <option value="whole">Pastel completo</option>
+                        <option value="portion">Por porción</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="portion-quantity-container">
+                    <label for="portion-quantity">Cantidad de porciones</label>
+                    <input type="number" id="portion-quantity" value="1" min="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="exchange-rate">Tasa de cambio ($ a Bs)</label>
+                    <input type="number" id="exchange-rate" step="0.01" value="77.00">
+                </div>
+                
+                <button id="generate-sale">Generar Venta</button>
+                
+                <div id="receipt-container" class="hidden">
+                    <div class="receipt" id="receipt">
+                        <div class="receipt-header">
+                            <h2 id="receipt-business-name">PASTELOMETRO</h2>
+                            <p>Recibo de Venta</p>
+                        </div>
+                        <div id="receipt-content">
+                            <!-- Contenido del recibo -->
+                        </div>
+                    </div>
+                    <button id="copy-receipt">Copiar Recibo</button>
+                    <button id="share-receipt">Compartir</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Reporte de Ventas</h2>
+                <button id="clear-sales" class="btn-secondary">Eliminar Reporte</button>
+                <table id="sales-report">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Receta</th>
+                            <th>Tipo</th>
+                            <th>Cantidad</th>
+                            <th>Total ($)</th>
+                            <th>Total (Bs)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sales-list">
+                        <!-- Aquí se cargarán las ventas -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="settings" class="tab-content">
+            <div class="card">
+                <h2>Configuración del Negocio</h2>
+                <div class="form-group">
+                    <label for="business-name-input">Nombre de tu Emprendimiento</label>
+                    <input type="text" id="business-name-input" placeholder="Ej: Dulces Tentaciones">
+                </div>
+                <button id="save-business-name">Guardar Nombre</button>
+            </div>
+            
+            <div class="card">
+                <h2>Exportar/Importar Datos</h2>
+                <p>Respaldar toda la información de la aplicación</p>
+                <button id="export-data">Exportar Datos</button>
+                <div class="form-group">
+                    <label for="import-data">Importar Datos</label>
+                    <input type="file" id="import-data" accept=".json">
+                </div>
+                <button id="import-data-btn">Importar</button>
+            </div>
+            
+            <div class="card">
+                <h2>Restablecer Datos</h2>
+                <p>Eliminar toda la información almacenada</p>
+                <button id="reset-data" class="btn-secondary">Restablecer Todo</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
