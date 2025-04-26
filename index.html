@@ -171,13 +171,16 @@
                     <input type="number" id="exchange-rate" step="0.01" value="77.00">
                 </div>
                 
-                <button id="generate-sale">Generar Venta</button>
+                <div class="button-group">
+                    <button id="generate-presupuesto" class="btn-secondary">Presupuesto</button>
+                    <button id="generate-sale">Generar Venta</button>
+                </div>
                 
                 <div id="receipt-container" class="hidden">
                     <div class="receipt" id="receipt">
                         <div class="receipt-header">
                             <h2 id="receipt-business-name">PASTELOMETRO</h2>
-                            <p>Recibo de Venta</p>
+                            <p id="receipt-type">Recibo de Venta</p>
                         </div>
                         <div id="receipt-content">
                             <!-- Contenido del recibo -->
@@ -190,7 +193,6 @@
             
             <div class="card">
                 <h2>Reporte de Ventas</h2>
-                <button id="clear-sales" class="btn-secondary">Eliminar Reporte</button>
                 <table id="sales-report">
                     <thead>
                         <tr>
@@ -200,6 +202,7 @@
                             <th>Cantidad</th>
                             <th>Total ($)</th>
                             <th>Total (Bs)</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="sales-list">
