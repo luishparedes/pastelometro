@@ -85,6 +85,25 @@ button:hover {
     background-color: var(--accent);
 }
 
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+.button-group button {
+    flex: 1;
+}
+
+.delete-sale-btn {
+    background-color: #ff6b6b;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.delete-sale-btn:hover {
+    background-color: #ff5252;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -161,6 +180,13 @@ th {
     margin-top: 10px;
 }
 
+.receipt-note {
+    margin-top: 15px;
+    font-style: italic;
+    text-align: center;
+    color: #666;
+}
+
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -170,5 +196,9 @@ th {
 @media (max-width: 768px) {
     .grid {
         grid-template-columns: 1fr;
+    }
+    
+    .button-group {
+        flex-direction: column;
     }
 }
