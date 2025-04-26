@@ -48,10 +48,10 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('save-recipe').addEventListener('click', saveRecipe);
         
         // Ventas
-        document.getElementById('generate-sale').addEventListener('click', generateSale);
+        document.getElementById('generate-sale').addEventListener('click', () => generateSale(false));
+        document.getElementById('generate-presupuesto').addEventListener('click', () => generateSale(true));
         document.getElementById('copy-receipt').addEventListener('click', copyReceipt);
         document.getElementById('share-receipt').addEventListener('click', shareReceipt);
-        document.getElementById('clear-sales').addEventListener('click', clearSales);
         
         // Configuración
         saveBusinessNameBtn.addEventListener('click', saveBusinessName);
@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Funciones de ventas
-    function generateSale() {
+    function generateSale(isPresupuesto = false) {
         const recipeId = parseInt(document.getElementById('sale-recipe').value);
         const saleType = document.getElementById('sale-type').value;
         const portionQuantity = parseInt(document.getElementById('portion-quantity').value) || 1;
@@ -354,36 +354,45 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const totalBs = total * exchangeRate;
         
-        const sale = {
-            id: Date.now(),
-            recipeId,
+        if (!isPresupuesto) {
+            const sale = {
+                id: Date.now(),
+                recipeId,
+                recipeName: recipe.name,
+                saleType,
+                quantity: saleType === 'portion' ? portionQuantity : 1,
+                total,
+                totalBs,
+                exchangeRate,
+                date: new Date().toISOString()
+            };
+            
+            sales.push(sale);
+            saveSales();
+            loadSales();
+        }
+        
+        // Generar recibo
+        generateReceipt({
             recipeName: recipe.name,
             saleType,
             quantity: saleType === 'portion' ? portionQuantity : 1,
             total,
             totalBs,
-            exchangeRate,
-            date: new Date().toISOString()
-        };
-        
-        sales.push(sale);
-        saveSales();
-        
-        // Generar recibo
-        generateReceipt(sale, recipe);
+            exchangeRate
+        }, recipe, isPresupuesto);
         
         // Mostrar recibo
         document.getElementById('receipt-container').classList.remove('hidden');
-        
-        // Actualizar reporte de ventas
-        loadSales();
     }
     
-    function generateReceipt(sale, recipe) {
+    function generateReceipt(sale, recipe, isPresupuesto = false) {
         const receiptBusinessName = document.getElementById('receipt-business-name');
+        const receiptType = document.getElementById('receipt-type');
         const receiptContent = document.getElementById('receipt-content');
         
         receiptBusinessName.textContent = businessName;
+        receiptType.textContent = isPresupuesto ? 'Presupuesto' : 'Recibo de Venta';
         
         let html = `
             <div class="receipt-item">
@@ -415,6 +424,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span>1$ = ${sale.exchangeRate.toFixed(2)} Bs</span>
             </div>
         `;
+        
+        if (isPresupuesto) {
+            html += `
+                <div class="receipt-note">
+                    <p><em>Este es un presupuesto, no una venta registrada.</em></p>
+                </div>
+            `;
+        }
         
         receiptContent.innerHTML = html;
     }
@@ -451,7 +468,7 @@ document.addEventListener('DOMContentLoaded', function() {
         tbody.innerHTML = '';
         
         if (sales.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6">No hay ventas registradas</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7">No hay ventas registradas</td></tr>';
             return;
         }
         
@@ -471,6 +488,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${sale.quantity}</td>
                 <td>$${sale.total.toFixed(2)}</td>
                 <td>${sale.totalBs.toFixed(2)} Bs</td>
+                <td><button class="delete-sale-btn" onclick="deleteSale(${sale.id})">Eliminar</button></td>
             `;
             tbody.appendChild(row);
             
@@ -485,16 +503,9 @@ document.addEventListener('DOMContentLoaded', function() {
             <td colspan="4">TOTALES</td>
             <td>$${totalSales.toFixed(2)}</td>
             <td>${totalSalesBs.toFixed(2)} Bs</td>
+            <td></td>
         `;
         tbody.appendChild(totalsRow);
-    }
-    
-    function clearSales() {
-        if (confirm('¿Está seguro que desea eliminar todo el historial de ventas?')) {
-            sales = [];
-            saveSales();
-            loadSales();
-        }
     }
     
     function saveSales() {
