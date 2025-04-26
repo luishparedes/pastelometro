@@ -488,9 +488,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${sale.quantity}</td>
                 <td>$${sale.total.toFixed(2)}</td>
                 <td>${sale.totalBs.toFixed(2)} Bs</td>
-                <td><button class="delete-sale-btn" onclick="deleteSale(${sale.id})">Eliminar</button></td>
+                <td><button class="delete-sale-btn" data-id="${sale.id}">Eliminar</button></td>
             `;
             tbody.appendChild(row);
+            
+            // Agregar event listener al botón de eliminar
+            row.querySelector('.delete-sale-btn').addEventListener('click', function() {
+                deleteSale(parseInt(this.getAttribute('data-id')));
+            });
             
             totalSales += sale.total;
             totalSalesBs += sale.totalBs;
@@ -510,6 +515,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function saveSales() {
         localStorage.setItem('sales', JSON.stringify(sales));
+    }
+    
+    // Función para eliminar venta (ahora correctamente definida)
+    function deleteSale(id) {
+        if (confirm('¿Está seguro que desea eliminar esta venta?')) {
+            sales = sales.filter(s => s.id !== id);
+            saveSales();
+            loadSales();
+        }
     }
     
     // Funciones de configuración
@@ -684,4 +698,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updateIngredientDropdowns();
         }
     };
+    
+    // Hacer la función deleteSale disponible globalmente
+    window.deleteSale = deleteSale;
 });
