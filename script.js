@@ -448,19 +448,40 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function shareReceipt() {
+        const receipt = document.getElementById('receipt');
+        const receiptText = `📄 Recibo de ${businessName}\n\n` + 
+                           `Receta: ${receipt.querySelector('.receipt-item:nth-child(1) span:last-child').textContent}\n` +
+                           `Tipo: ${receipt.querySelector('.receipt-item:nth-child(2) span:last-child').textContent}\n` +
+                           `Cantidad: ${receipt.querySelector('.receipt-item:nth-child(3) span:last-child').textContent}\n` +
+                           `Fecha: ${receipt.querySelector('.receipt-item:nth-child(4) span:last-child').textContent}\n` +
+                           `Total ($): ${receipt.querySelector('.receipt-total span:last-child').textContent}\n` +
+                           `Total (Bs): ${receipt.querySelector('.receipt-item:nth-child(6) span:last-child').textContent}\n` +
+                           `Tasa de cambio: ${receipt.querySelector('.receipt-item:nth-child(7) span:last-child').textContent}`;
+        
         if (navigator.share) {
-            const receipt = document.getElementById('receipt');
             navigator.share({
                 title: `Recibo de ${businessName}`,
-                text: `Detalles de la venta de ${businessName}`,
-                url: window.location.href
+                text: receiptText
             }).catch(err => {
                 console.error('Error al compartir:', err);
-                alert('No se pudo compartir el recibo. Puede copiarlo manualmente.');
+                // Fallback para navegadores que no soportan compartir sin URL
+                copyToClipboard(receiptText);
+                alert('Recibo copiado al portapapeles. Puede pegarlo y compartirlo manualmente.');
             });
         } else {
-            alert('La función de compartir no está disponible en este navegador. Puede copiar el recibo manualmente.');
+            // Fallback para navegadores que no soportan la API de compartir
+            copyToClipboard(receiptText);
+            alert('Recibo copiado al portapapeles. Puede pegarlo y compartirlo manualmente.');
         }
+    }
+    
+    function copyToClipboard(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
     }
     
     function loadSales() {
